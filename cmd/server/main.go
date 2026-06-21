@@ -17,5 +17,7 @@ func main() {
 	mux.HandleFunc("PUT /tasks/{id}", handler.UpdateTask)
 	mux.HandleFunc("DELETE /tasks/{id}", handler.DeleteTask)
 
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	loggedMux := handlers.LoggingMiddleware(mux)
+
+	log.Fatal(http.ListenAndServe(":8080", loggedMux))
 }
