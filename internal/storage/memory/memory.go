@@ -53,8 +53,24 @@ func (t *TaskStorage) Update(id int, task models.Task) (models.Task, error) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	val, exists := t.task[id]
+	_, exists := t.task[id]
 	if !exists {
 		return models.Task{}, errors.New("task not found")
 	}
+	task.ID = id
+	t.task[id] = task
+	return task, nil
+}
+
+func (t *TaskStorage) Delete(id int) error {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	_, exists := t.task[id]
+	if !exists {
+		return errors.New("task not found")
+	}
+
+	delete(t.task, id)
+	return nil
 }
